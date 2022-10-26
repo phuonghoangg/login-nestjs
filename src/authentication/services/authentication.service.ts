@@ -41,7 +41,7 @@ export class AuthenticationService {
         }
     }
     
-      private async verifyPassword(plainTextPassword: string, hashedPassword: string) {
+    private async verifyPassword(plainTextPassword: string, hashedPassword: string) {
         const isPasswordMatching = await bcrypt.compare(
           plainTextPassword,
           hashedPassword
@@ -53,14 +53,13 @@ export class AuthenticationService {
      
     public getCookieWithJwtToken(user){
         const payload  = { user };
-        
-        const token = this.jwtService.sign(payload)
-        return {cookie:`Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`,token:token};
+        const refreshToken = this.jwtService.sign(payload)
+        return `Authentication=${refreshToken}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME_REFRESHTOKEN')}`
     }
 
-    public genToken(user: User){
-        const {name,id} = user
-        const token = this.jwtService.sign({name,id})
+    public genToken(user){
+        const payload = {user}
+        const token = this.jwtService.sign(payload)
         return token;
     }
     public getCookieForLogOut() {

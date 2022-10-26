@@ -21,6 +21,7 @@ export class UsersService {
     }
     throw new HttpException('User with this email does not exist', HttpStatus.NOT_FOUND);
 
+
    }
    async createUser(dataUser:CreateUserDto){
    
@@ -28,6 +29,7 @@ export class UsersService {
     await this.userRepository.save(newUser)
     return newUser
    }
+   
    async getById(id:number){
     const  user  = await this.userRepository.findOneById(id)
     if(user){

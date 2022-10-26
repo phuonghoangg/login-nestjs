@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { Controller ,Body,Delete,Param,Post,Put, Get ,UseGuards} from '@nestjs/common';
+import { Controller ,Body,Delete,Param,Post,Put, Get ,UseGuards,UsePipes} from '@nestjs/common';
+import { Roles } from 'src/authentication/dto/role.decorator';
+import { RolesGuard } from 'src/authentication/dto/roles.guard';
 import JwtAuthenticationGuard from 'src/authentication/strategy/jwt-authentication.guard';
 import { PostsService } from '../services/posts.service';
 
@@ -9,7 +11,8 @@ export class PostsController {
     constructor(private readonly postService:PostsService){}
 
     @Get()
-    @UseGuards(JwtAuthenticationGuard)
+    @UseGuards(JwtAuthenticationGuard,RolesGuard)
+    @Roles('admin')
     getAllPost(){
         return this.postService.getAllPost();
     }
@@ -18,7 +21,7 @@ export class PostsController {
         return this.postService.getPostByID(Number(id))
     }
     @Post()
-    @UseGuards(JwtAuthenticationGuard)
+    @UseGuards()
     createPost(@Body() post){
         return this.postService.createPost(post)
     }

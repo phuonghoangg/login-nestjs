@@ -32,22 +32,46 @@ export class AuthenticationController {
     @Post('login')
     async logIn(@Req() request, @Res() response: Response){
         const {user} = request
+        const token = this.authenticationService.genToken(user)
         const cookie = this.authenticationService.getCookieWithJwtToken(user)
-        response.setHeader('Set-Cookie', cookie.cookie);
+        response.setHeader('Set-Cookie',cookie)
         user.password = undefined
-        return response.send({user,token:cookie.token})
+        return response.send({user,token:token})
     }
     @UseGuards(JwtAuthenticationGuard)
     @Post('log-out')
-     async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
+     async logOut(@Res() response: Response) {
          response.setHeader('Set-Cookie', this.authenticationService.getCookieForLogOut());
         return response.sendStatus(200);
     } 
+
     @UseGuards(JwtAuthenticationGuard)
     @Get()
     authenticate(@Req() request: RequestWithUser) {
     const user = request.user;
     user.password = undefined;
     return user;
+  }
+
+  //check OTP
+  @UseGuards(JwtAuthenticationGuard)
+  @Post('check')
+  checkOTP(@Body() body:any , @Req() request:RequestWithUser){
+    console.log(body.name);
+    console.log(request.user.name);
+    
+    
+    if(body.name === request.user.name){
+      return 'check ne'
+    }
+    console.log("sai OTP");
+    
+    
+    // user.otp
+  }
+
+  @Post('refreshToken')
+  async refreshToken(){
+    return
   }
 }

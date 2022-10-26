@@ -23,7 +23,7 @@ import { LocalStrategy } from './strategy/local.strategy';
         })
       })
     ],
-  providers: [AuthenticationService,LocalStrategy, JwtStrategy],
+  providers: [AuthenticationService,LocalStrategy, JwtStrategy,],
   controllers: [AuthenticationController],
 })
 export class AuthenticationModule {}

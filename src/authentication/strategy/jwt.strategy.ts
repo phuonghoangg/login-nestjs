@@ -24,15 +24,16 @@ export class JwtStrategy extends PassportStrategy(Strategy){
             secretOrKey: process.env.JWT_SECRET
         })
     }
-
     async validate(payload){
+       
+        
         //   return
-        if(payload.user.isAdmin){
+        if(payload.user){
 
                 const user = await this.userService.getById(payload.user.id)
                 return user
         }
-        throw new HttpException('User khong phai la admin', HttpStatus.NOT_FOUND);
+        throw new HttpException('User chua dang nhap', HttpStatus.NOT_FOUND);
     }
 }
 
